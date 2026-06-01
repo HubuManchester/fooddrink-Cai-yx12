@@ -6,9 +6,9 @@ namespace RecipeRandomizer.Views;
 
 public partial class MainPage : ContentPage
 {
-    private RecipeService _recipeService;
-    private List<Recipe> _allRecipes = new();
-    private List<Recipe> _displayedRecipes = new();
+    private RecipeService _recipeService = null!;
+    private List<Recipe> _allRecipes = null!;
+    private List<Recipe> _displayedRecipes = null!;
     private string _currentCategory = "All";
     private string _currentSearchKeyword = "";
 
@@ -31,6 +31,38 @@ public partial class MainPage : ContentPage
         FilterButton.Clicked += OnFilterClicked;
         RandomButton.Clicked += OnRandomClicked;
         FavoritesButton.Clicked += OnFavoritesClicked;
+        SettingsButton.Clicked += OnSettingsClicked;
+    }
+
+    public void RefreshFonts()
+    {
+        SearchBar.FontSize = AccessibilityService.ScaleFontSize(14);
+        FilterButton.FontSize = AccessibilityService.ScaleFontSize(13);
+        RandomButton.FontSize = AccessibilityService.ScaleFontSize(15);
+        FavoritesButton.FontSize = AccessibilityService.ScaleFontSize(15);
+        CategoryPicker.FontSize = AccessibilityService.ScaleFontSize(12);
+
+        ApplyTheme();
+    }
+
+    public void ApplyTheme()
+    {
+        if (AccessibilityService.IsDarkTheme)
+        {
+            this.BackgroundColor = Color.FromArgb("#1E1E1E");
+            SearchBar.BackgroundColor = Color.FromArgb("#333333");
+            SearchBar.TextColor = Colors.White;
+            CategoryPicker.BackgroundColor = Color.FromArgb("#333333");
+            CategoryPicker.TextColor = Colors.White;
+        }
+        else
+        {
+            this.BackgroundColor = Color.FromArgb("#F5F5F5");
+            SearchBar.BackgroundColor = Colors.White;
+            SearchBar.TextColor = Colors.Black;
+            CategoryPicker.BackgroundColor = Colors.White;
+            CategoryPicker.TextColor = Colors.Black;
+        }
     }
 
     private void InitializeHardware()
@@ -127,9 +159,11 @@ public partial class MainPage : ContentPage
         await Navigation.PushAsync(new FavoritesPage(favorites, _recipeService));
     }
 
-    /// <summary>
-    /// Handle recipe tap - THIS IS THE NEW METHOD
-    /// </summary>
+    private async void OnSettingsClicked(object? sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new SettingsPage());
+    }
+
     private async void OnRecipeTapped(object sender, TappedEventArgs e)
     {
         if (e.Parameter is Recipe selectedRecipe)
@@ -150,6 +184,7 @@ public partial class MainPage : ContentPage
         }
 
         ApplyFilterAndSearch();
+        RefreshFonts();
     }
 
     protected override void OnDisappearing()

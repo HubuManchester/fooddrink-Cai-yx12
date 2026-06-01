@@ -4,7 +4,6 @@
              xmlns:converters="clr-namespace:RecipeRandomizer.Converters"
              x:Class="RecipeRandomizer.Views.MainPage"
              Title="Recipe Book"
-             BackgroundColor="#F5F5F5"
              x:Name="MainPageRoot">
 
     <ContentPage.Resources>
@@ -13,13 +12,26 @@
 
     <Grid RowDefinitions="Auto, Auto, Auto, *">
 
-        <!-- Title -->
-        <Label Grid.Row="0"
-               Text="🍽️ Random Recipe"
-               FontSize="22"
-               FontAttributes="Bold"
-               HorizontalOptions="Center"
-               Padding="0,15,0,10"/>
+        <!-- Title with Settings button -->
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Padding="10,15,10,10">
+            <Label Grid.Column="0"
+                   Text="🍽️ Random Recipe"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+            <Button Grid.Column="1"
+                    x:Name="SettingsButton"
+                    Text="⚙️"
+                    BackgroundColor="Transparent"
+                    TextColor="#FF6B35"
+                    FontSize="28"
+                    WidthRequest="70"
+                    HeightRequest="60"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    CornerRadius="35"/>
+        </Grid>
 
         <!-- Search and Filter Area -->
         <VerticalStackLayout Grid.Row="1" Padding="15" Spacing="10">
@@ -40,7 +52,7 @@
                         FontSize="12"
                         VerticalOptions="Center"/>
                 <Button x:Name="FilterButton"
-                        Text="  Filter  "
+                        Text="Filter"
                         BackgroundColor="#FF6B35"
                         TextColor="White"
                         CornerRadius="10"
@@ -57,7 +69,7 @@
               ColumnSpacing="10"
               Padding="15,0,15,10">
             <Button x:Name="RandomButton"
-                    Text="  🎲 Random  "
+                    Text="🎲 Random"
                     BackgroundColor="#4CAF50"
                     TextColor="White"
                     CornerRadius="15"
@@ -67,7 +79,7 @@
                     HorizontalOptions="Center"/>
             <Button x:Name="FavoritesButton"
                     Grid.Column="1"
-                    Text="  ⭐ Favorites  "
+                    Text="⭐ Favorites"
                     BackgroundColor="#FF9800"
                     TextColor="White"
                     CornerRadius="15"
@@ -86,10 +98,8 @@
                 <DataTemplate>
                     <Frame Padding="12,8"
                            Margin="10,4"
-                           BackgroundColor="White"
                            CornerRadius="12"
                            BorderColor="#E0E0E0">
-                        <!-- 点击手势 -->
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer 
                                 CommandParameter="{Binding .}"
