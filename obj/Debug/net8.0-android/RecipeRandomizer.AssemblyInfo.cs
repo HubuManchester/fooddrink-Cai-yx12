@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RecipeRandomizer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+2f0b8583166810624d87da62d9453f6213cc9f88")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+663929e255c1d6fc6be85dea4ad350a4e90a732a")]
 [assembly: System.Reflection.AssemblyProductAttribute("RecipeRandomizer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RecipeRandomizer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

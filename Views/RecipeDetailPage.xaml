@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RecipeRandomizer.Views.RecipeDetailPage"
-             Title="Recipe Details"
-             BackgroundColor="#F5F5F5">
+             Title="Recipe Details">
 
     <ScrollView>
         <VerticalStackLayout Padding="15" Spacing="8">
@@ -26,6 +25,14 @@
             <Button x:Name="SpeakButton"
                     Text="🔊 Read Steps Aloud"
                     BackgroundColor="#2196F3"
+                    TextColor="White"
+                    HeightRequest="40"
+                    CornerRadius="10"
+                    FontAttributes="Bold"/>
+
+            <Button x:Name="CameraButton"
+                    Text="📷 Take Photo"
+                    BackgroundColor="#9C27B0"
                     TextColor="White"
                     HeightRequest="40"
                     CornerRadius="10"

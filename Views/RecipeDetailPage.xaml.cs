@@ -17,20 +17,18 @@ public partial class RecipeDetailPage : ContentPage
         _recipeService = recipeService;
         _textToSpeech = TextToSpeech.Default;
 
-        // Display recipe details immediately
         RecipeNameLabel.Text = _recipe.Name;
         CategoryLabel.Text = _recipe.Category;
         PrepTimeLabel.Text = $"{_recipe.PrepTime} min";
 
-        // Load collections
         IngredientsCollectionView.ItemsSource = _recipe.Ingredients;
         StepsCollectionView.ItemsSource = _recipe.Steps;
 
         UpdateFavoriteButton();
 
-        // Bind events
         FavoriteButton.Clicked += OnFavoriteClicked;
         SpeakButton.Clicked += OnSpeakClicked;
+        CameraButton.Clicked += OnCameraClicked;
     }
 
     private void UpdateFavoriteButton()
@@ -73,6 +71,20 @@ public partial class RecipeDetailPage : ContentPage
         catch (Exception ex)
         {
             await DisplayAlert("Error", $"Cannot read aloud: {ex.Message}", "OK");
+        }
+    }
+
+    private async void OnCameraClicked(object? sender, EventArgs e)
+    {
+        var photoPath = await CameraService.TakePhotoAsync();
+
+        if (photoPath != null)
+        {
+            await DisplayAlert("Success", "Photo taken and saved!", "OK");
+        }
+        else
+        {
+            await DisplayAlert("Error", "Failed to take photo. Please grant camera permission.", "OK");
         }
     }
 }
