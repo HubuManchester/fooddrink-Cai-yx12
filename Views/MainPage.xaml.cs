@@ -63,6 +63,9 @@ public partial class MainPage : ContentPage
             CategoryPicker.BackgroundColor = Colors.White;
             CategoryPicker.TextColor = Colors.Black;
         }
+
+        // 刷新列表以更新每个菜品的背景色和文字颜色
+        RefreshRecipeList();
     }
 
     private void InitializeHardware()

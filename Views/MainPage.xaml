@@ -98,6 +98,7 @@
                 <DataTemplate>
                     <Frame Padding="12,8"
                            Margin="10,4"
+                           BackgroundColor="{Binding ItemBackgroundColor}"
                            CornerRadius="12"
                            BorderColor="#E0E0E0">
                         <Frame.GestureRecognizers>
@@ -108,14 +109,15 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout>
                                 <Label Text="{Binding Name}"
-                                       FontSize="15"
+                                       FontSize="{Binding NameFontSize}"
                                        FontAttributes="Bold"
-                                       LineBreakMode="TailTruncation"/>
+                                       LineBreakMode="TailTruncation"
+                                       TextColor="{Binding ItemTextColor}"/>
                                 <Label Text="{Binding Category}"
-                                       FontSize="11"
-                                       TextColor="Gray"/>
+                                       FontSize="{Binding CategoryFontSize}"
+                                       TextColor="{Binding CategoryTextColor}"/>
                                 <Label Text="{Binding PrepTime, StringFormat='⏱️ {0} min'}"
-                                       FontSize="11"
+                                       FontSize="{Binding TimeFontSize}"
                                        TextColor="#FF6B35"/>
                             </VerticalStackLayout>
                             <Label Grid.Column="1"
