@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RecipeRandomizer</name>
+    </assembly>
+    <members>
+        <member name="M:RecipeRandomizer.Views.MainPage.OnRecipeTapped(System.Object,Microsoft.Maui.Controls.TappedEventArgs)">
+            <summary>
+            Handle recipe tap - THIS IS THE NEW METHOD
+            </summary>
+        </member>
+    </members>
+</doc>

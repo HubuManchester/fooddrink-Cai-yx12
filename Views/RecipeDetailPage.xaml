@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeRandomizer.Views.RecipeDetailPage"
+             Title="Recipe Details"
+             BackgroundColor="#F5F5F5">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="15" Spacing="8">
+
+            <Label x:Name="RecipeNameLabel"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   LineBreakMode="WordWrap"/>
+
+            <HorizontalStackLayout Spacing="15">
+                <Label x:Name="CategoryLabel" FontSize="13" TextColor="Gray"/>
+                <Label x:Name="PrepTimeLabel" FontSize="13" TextColor="#FF6B35"/>
+            </HorizontalStackLayout>
+
+            <Button x:Name="FavoriteButton"
+                    HeightRequest="40"
+                    CornerRadius="10"
+                    FontAttributes="Bold"/>
+
+            <Button x:Name="SpeakButton"
+                    Text="🔊 Read Steps Aloud"
+                    BackgroundColor="#2196F3"
+                    TextColor="White"
+                    HeightRequest="40"
+                    CornerRadius="10"
+                    FontAttributes="Bold"/>
+
+            <Label Text="📝 Ingredients"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   Margin="0,10,0,0"/>
+
+            <CollectionView x:Name="IngredientsCollectionView"
+                            HeightRequest="130">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding .}"
+                               FontSize="13"
+                               Margin="10,3"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Text="👩‍🍳 Steps"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   Margin="0,10,0,0"/>
+
+            <CollectionView x:Name="StepsCollectionView"
+                            HeightRequest="220">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding .}"
+                               FontSize="13"
+                               Margin="10,3"
+                               LineBreakMode="WordWrap"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

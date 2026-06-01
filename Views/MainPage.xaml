@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:RecipeRandomizer.Converters"
+             x:Class="RecipeRandomizer.Views.MainPage"
+             Title="Recipe Book"
+             BackgroundColor="#F5F5F5"
+             x:Name="MainPageRoot">
+
+    <ContentPage.Resources>
+        <converters:FavoriteConverter x:Key="FavoriteConverter"/>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, Auto, Auto, *">
+
+        <!-- Title -->
+        <Label Grid.Row="0"
+               Text="🍽️ Random Recipe"
+               FontSize="22"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               Padding="0,15,0,10"/>
+
+        <!-- Search and Filter Area -->
+        <VerticalStackLayout Grid.Row="1" Padding="15" Spacing="10">
+
+            <SearchBar x:Name="SearchBar"
+                       Placeholder="Search recipes..."
+                       BackgroundColor="White"
+                       CancelButtonColor="Gray"/>
+
+            <HorizontalStackLayout Spacing="10">
+                <Label Text="Category:"
+                       VerticalTextAlignment="Center"
+                       FontSize="14"/>
+                <Picker x:Name="CategoryPicker"
+                        Title="All"
+                        WidthRequest="130"
+                        BackgroundColor="White"
+                        FontSize="12"
+                        VerticalOptions="Center"/>
+                <Button x:Name="FilterButton"
+                        Text="  Filter  "
+                        BackgroundColor="#FF6B35"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="40"
+                        FontSize="13"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <!-- Random and Favorites Buttons -->
+        <Grid Grid.Row="2"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="10"
+              Padding="15,0,15,10">
+            <Button x:Name="RandomButton"
+                    Text="  🎲 Random  "
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    CornerRadius="15"
+                    FontAttributes="Bold"
+                    HeightRequest="45"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"/>
+            <Button x:Name="FavoritesButton"
+                    Grid.Column="1"
+                    Text="  ⭐ Favorites  "
+                    BackgroundColor="#FF9800"
+                    TextColor="White"
+                    CornerRadius="15"
+                    FontAttributes="Bold"
+                    HeightRequest="45"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"/>
+        </Grid>
+
+        <!-- Recipe List -->
+        <CollectionView x:Name="RecipesCollectionView"
+                        Grid.Row="3"
+                        SelectionMode="None"
+                        Margin="0,5,0,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="12,8"
+                           Margin="10,4"
+                           BackgroundColor="White"
+                           CornerRadius="12"
+                           BorderColor="#E0E0E0">
+                        <!-- 点击手势 -->
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer 
+                                CommandParameter="{Binding .}"
+                                Tapped="OnRecipeTapped"/>
+                        </Frame.GestureRecognizers>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Name}"
+                                       FontSize="15"
+                                       FontAttributes="Bold"
+                                       LineBreakMode="TailTruncation"/>
+                                <Label Text="{Binding Category}"
+                                       FontSize="11"
+                                       TextColor="Gray"/>
+                                <Label Text="{Binding PrepTime, StringFormat='⏱️ {0} min'}"
+                                       FontSize="11"
+                                       TextColor="#FF6B35"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1"
+                                   Text="{Binding IsFavorite, Converter={StaticResource FavoriteConverter}}"
+                                   FontSize="20"
+                                   VerticalTextAlignment="Center"
+                                   HorizontalTextAlignment="Center"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

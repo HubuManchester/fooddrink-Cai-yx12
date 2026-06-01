@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:RecipeRandomizer.Converters"
+             x:Class="RecipeRandomizer.Views.FavoritesPage"
+             Title="⭐ My Favorites"
+             BackgroundColor="#F5F5F5">
+
+    <ContentPage.Resources>
+        <converters:FavoriteConverter x:Key="FavoriteConverter"/>
+    </ContentPage.Resources>
+
+    <Grid>
+        <CollectionView x:Name="FavoritesCollectionView"
+                        SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="12,8"
+                           Margin="8,4"
+                           BackgroundColor="White"
+                           CornerRadius="12"
+                           BorderColor="#E0E0E0">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Name}"
+                                       FontSize="15"
+                                       FontAttributes="Bold"/>
+                                <Label Text="{Binding Category}"
+                                       FontSize="11"
+                                       TextColor="Gray"/>
+                                <Label Text="{Binding PrepTime, StringFormat='⏱️ {0} min'}"
+                                       FontSize="11"
+                                       TextColor="#FF6B35"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1"
+                                   Text="⭐"
+                                   FontSize="18"
+                                   VerticalTextAlignment="Center"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Label x:Name="EmptyLabel"
+               Text="No favorites yet. ❤️&#10;Go back and add some recipes!"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               FontSize="14"
+               TextColor="Gray"
+               IsVisible="False"/>
+    </Grid>
+</ContentPage>
