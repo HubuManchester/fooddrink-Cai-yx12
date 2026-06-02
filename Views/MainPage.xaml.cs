@@ -1,10 +1,12 @@
-﻿using RecipeRandomizer.Models;
+﻿using System.ComponentModel;
+using Microsoft.Maui.Networking;
+using RecipeRandomizer.Models;
 using RecipeRandomizer.Services;
 using RecipeRandomizer.Views;
 
 namespace RecipeRandomizer.Views;
 
-public partial class MainPage : ContentPage
+public partial class MainPage : ContentPage, INotifyPropertyChanged
 {
     private RecipeService _recipeService = null!;
     private List<Recipe> _allRecipes = null!;
@@ -18,9 +20,18 @@ public partial class MainPage : ContentPage
     private bool _isNavigating = false;
     private bool _justReturned = false;
 
-    private Recipe _dailyRecommendation = null!;
+    private bool _isRefreshing = false;
 
-    // 摇动检测变量
+    public bool IsRefreshing
+    {
+        get => _isRefreshing;
+        set
+        {
+            _isRefreshing = value;
+            OnPropertyChanged(nameof(IsRefreshing));
+        }
+    }
+
     private double _lastX = 0, _lastY = 0, _lastZ = 0;
     private DateTime _lastShakeTime = DateTime.MinValue;
     private const double ShakeThreshold = 3.0;
@@ -29,13 +40,13 @@ public partial class MainPage : ContentPage
     public MainPage()
     {
         InitializeComponent();
+        BindingContext = this;
 
         _recipeService = new RecipeService();
         _allRecipes = _recipeService.GetAllRecipes();
         _displayedRecipes = new List<Recipe>(_allRecipes);
 
         LoadCategories();
-        LoadDailyRecommendation();
         RefreshRecipeList();
 
         SearchBar.TextChanged += OnSearchTextChanged;
@@ -43,31 +54,32 @@ public partial class MainPage : ContentPage
         RandomButton.Clicked += OnRandomClicked;
         FavoritesButton.Clicked += OnFavoritesClicked;
         SettingsButton.Clicked += OnSettingsClicked;
-    }
 
-    private void LoadDailyRecommendation()
-    {
-        var allRecipes = _recipeService.GetAllRecipes();
-        var todaySeed = DateTime.Now.DayOfYear;
-        var random = new Random(todaySeed);
-        _dailyRecommendation = allRecipes[random.Next(allRecipes.Count)];
-        DailyRecommendationLabel.Text = _dailyRecommendation.Name;
+        RefreshView.Command = new Command(async () => await RefreshData());
     }
 
     public void RefreshFonts()
     {
+        System.Diagnostics.Debug.WriteLine("RefreshFonts called");
+
         SearchBar.FontSize = AccessibilityService.ScaleFontSize(14);
         FilterButton.FontSize = AccessibilityService.ScaleFontSize(13);
         RandomButton.FontSize = AccessibilityService.ScaleFontSize(15);
         FavoritesButton.FontSize = AccessibilityService.ScaleFontSize(15);
         CategoryPicker.FontSize = AccessibilityService.ScaleFontSize(12);
 
+        // 强制刷新列表，让所有绑定重新计算
+        var currentList = _displayedRecipes.ToList();
+        RecipesCollectionView.ItemsSource = null;
+        RecipesCollectionView.ItemsSource = currentList;
+
         ApplyTheme();
-        RefreshRecipeList();
     }
 
     public void ApplyTheme()
     {
+        System.Diagnostics.Debug.WriteLine($"ApplyTheme called, IsDarkTheme: {AccessibilityService.IsDarkTheme}");
+
         if (AccessibilityService.IsDarkTheme)
         {
             this.BackgroundColor = Color.FromArgb("#1E1E1E");
@@ -83,6 +95,31 @@ public partial class MainPage : ContentPage
             SearchBar.TextColor = Colors.Black;
             CategoryPicker.BackgroundColor = Colors.White;
             CategoryPicker.TextColor = Colors.Black;
+        }
+    }
+
+    private async Task RefreshData()
+    {
+        if (IsRefreshing) return;
+
+        IsRefreshing = true;
+
+        try
+        {
+            await _recipeService.ForceRefreshRemoteData();
+
+            _allRecipes = _recipeService.GetAllRecipes();
+            _displayedRecipes = new List<Recipe>(_allRecipes);
+
+            ApplyFilterAndSearch();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Refresh error: {ex.Message}");
+        }
+        finally
+        {
+            IsRefreshing = false;
         }
     }
 
@@ -139,7 +176,6 @@ public partial class MainPage : ContentPage
 
                     MainThread.BeginInvokeOnMainThread(async () =>
                     {
-                        // 震动反馈
                         try
                         {
                             if (HapticFeedback.Default.IsSupported)
@@ -218,7 +254,6 @@ public partial class MainPage : ContentPage
 
         try
         {
-            // 停止加速度计
             if (_accelerometer != null && _accelerometer.IsSupported && _accelerometer.IsMonitoring)
             {
                 _accelerometer.Stop();
@@ -279,18 +314,6 @@ public partial class MainPage : ContentPage
         {
             await Navigation.PushAsync(new RecipeDetailPage(selectedRecipe, _recipeService));
         }
-        else if (sender is Frame frame && frame.BindingContext is Recipe recipe)
-        {
-            await Navigation.PushAsync(new RecipeDetailPage(recipe, _recipeService));
-        }
-    }
-
-    private async void OnDailyRecommendationTapped(object sender, TappedEventArgs e)
-    {
-        if (_dailyRecommendation != null)
-        {
-            await Navigation.PushAsync(new RecipeDetailPage(_dailyRecommendation, _recipeService));
-        }
     }
 
     protected override void OnAppearing()
@@ -299,10 +322,8 @@ public partial class MainPage : ContentPage
 
         InitializeHardware();
 
-        // 标记刚返回，暂时忽略摇动
         _justReturned = true;
 
-        // 延迟重启加速度计，避免返回瞬间触发
         Task.Delay(500).ContinueWith(_ =>
         {
             _justReturned = false;
@@ -323,7 +344,6 @@ public partial class MainPage : ContentPage
         _displayedRecipes = new List<Recipe>(_allRecipes);
         ApplyFilterAndSearch();
         RefreshFonts();
-        LoadDailyRecommendation();
     }
 
     protected override void OnDisappearing()
@@ -341,5 +361,10 @@ public partial class MainPage : ContentPage
         {
             System.Diagnostics.Debug.WriteLine($"Failed to stop accelerometer: {ex.Message}");
         }
+    }
+
+    protected new void OnPropertyChanged(string? propertyName = null)
+    {
+        base.OnPropertyChanged(propertyName);
     }
 }

@@ -38,7 +38,7 @@ namespace RecipeRandomizer.Models
         [JsonPropertyName("isFavorite")]
         public bool IsFavorite { get; set; }
 
-        // 动态字体大小
+        // 动态字体大小（大字体模式支持）
         [JsonIgnore]
         public double NameFontSize => AccessibilityService.ScaleFontSize(15);
 

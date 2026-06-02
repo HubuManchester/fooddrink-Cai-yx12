@@ -1,1 +1,1 @@
-<Devices><Device id="5a70e467"><ResultingAbi>arm64-v8a</ResultingAbi><ToolsAbi /><SdkVersion>35</SdkVersion><LongOutput>product:fuxi;model:2211133C;device:fuxi;transport_id:16</LongOutput></Device></Devices>
+<Devices><Device id="76X9K23517003628"><ResultingAbi>arm64-v8a</ResultingAbi><ToolsAbi /><SdkVersion>31</SdkVersion><LongOutput>product:GOA-AL80;model:GOA_AL80;device:HWGOA-Q;transport_id:21</LongOutput></Device></Devices>

@@ -4,7 +4,7 @@ namespace RecipeRandomizer.Services;
 
 public class RecipeService
 {
-    private List<Recipe> _localRecipes;
+    private List<Recipe> _localRecipes = new();
     private List<Recipe> _cachedRecipes = new();
     private readonly ApiService _apiService;
     private bool _useRemoteData = true;
@@ -155,6 +155,28 @@ public class RecipeService
         finally
         {
             _isLoadingRemoteData = false;
+        }
+    }
+
+    public async Task ForceRefreshRemoteData()
+    {
+        try
+        {
+            var remoteRecipes = await _apiService.GetRecipesAsync();
+            if (remoteRecipes != null && remoteRecipes.Count > 0)
+            {
+                _cachedRecipes = remoteRecipes;
+                _useRemoteData = true;
+            }
+            else
+            {
+                _useRemoteData = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Force refresh error: {ex.Message}");
+            _useRemoteData = false;
         }
     }
 

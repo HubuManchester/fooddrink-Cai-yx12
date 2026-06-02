@@ -10,9 +10,9 @@
         <converters:FavoriteConverter x:Key="FavoriteConverter"/>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, *">
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, *">
 
-        <!-- Title with Settings button -->
+        <!-- 标题栏 + 设置按钮 -->
         <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Padding="10,15,10,10">
             <Label Grid.Column="0"
                    Text="🍽️ Random Recipe"
@@ -25,14 +25,14 @@
                     Text="⚙️"
                     BackgroundColor="Transparent"
                     TextColor="#FF6B35"
-                    FontSize="28"
-                    WidthRequest="70"
-                    HeightRequest="60"
+                    FontSize="24"
+                    WidthRequest="50"
+                    HeightRequest="50"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"/>
         </Grid>
 
-        <!-- Search Bar -->
+        <!-- 搜索框 -->
         <SearchBar x:Name="SearchBar"
                    Grid.Row="1"
                    Margin="15,5,15,0"
@@ -40,7 +40,7 @@
                    BackgroundColor="White"
                    CancelButtonColor="Gray"/>
 
-        <!-- Category Filter -->
+        <!-- 分类筛选 -->
         <HorizontalStackLayout Grid.Row="2" Padding="15" Spacing="10" Margin="0,5,0,0">
             <Label Text="Category:"
                    VerticalTextAlignment="Center"
@@ -61,7 +61,7 @@
                     HorizontalOptions="Center"/>
         </HorizontalStackLayout>
 
-        <!-- Random and Favorites Buttons -->
+        <!-- 随机和收藏按钮 -->
         <Grid Grid.Row="3"
               ColumnDefinitions="*,*"
               ColumnSpacing="10"
@@ -70,6 +70,7 @@
                     Text="🎲 Random"
                     BackgroundColor="#4CAF50"
                     TextColor="White"
+                    CornerRadius="15"
                     FontAttributes="Bold"
                     HeightRequest="45"
                     VerticalOptions="Center"/>
@@ -78,39 +79,15 @@
                     Text="⭐ Favorites"
                     BackgroundColor="#FF9800"
                     TextColor="White"
+                    CornerRadius="15"
                     FontAttributes="Bold"
                     HeightRequest="45"
                     VerticalOptions="Center"/>
         </Grid>
 
-        <!-- 今日推荐卡片 -->
-        <Frame x:Name="DailyRecommendationFrame"
-               Grid.Row="4"
-               Margin="15,5,15,5"
-               Padding="15,10"
-               BackgroundColor="#FFF3E0">
-            <Grid ColumnDefinitions="Auto, *">
-                <Label Text="🌟" FontSize="30" VerticalTextAlignment="Center"/>
-                <VerticalStackLayout Grid.Column="1" Margin="10,0,0,0">
-                    <Label Text="Today's Recommendation" 
-                           FontSize="12" 
-                           TextColor="#FF6B35"
-                           FontAttributes="Bold"/>
-                    <Label x:Name="DailyRecommendationLabel"
-                           Text="Loading..."
-                           FontSize="16"
-                           FontAttributes="Bold"
-                           LineBreakMode="TailTruncation"/>
-                </VerticalStackLayout>
-            </Grid>
-            <Frame.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnDailyRecommendationTapped"/>
-            </Frame.GestureRecognizers>
-        </Frame>
-
-        <!-- Add Recipe Button - 淡绿色 -->
+        <!-- 添加食谱按钮 -->
         <Frame x:Name="AddFrame"
-               Grid.Row="5"
+               Grid.Row="4"
                Margin="15,5,15,5"
                Padding="12,8"
                BackgroundColor="#E8F5E9"
@@ -126,45 +103,50 @@
             </Frame.GestureRecognizers>
         </Frame>
 
-        <!-- Recipe List -->
-        <CollectionView x:Name="RecipesCollectionView"
-                        Grid.Row="6"
-                        SelectionMode="None"
-                        Margin="0,5,0,0">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Padding="12,8"
-                           Margin="10,4"
-                           BackgroundColor="{Binding ItemBackgroundColor}">
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer 
-                                CommandParameter="{Binding .}"
-                                Tapped="OnRecipeTapped"/>
-                        </Frame.GestureRecognizers>
-                        <Grid ColumnDefinitions="*,Auto">
-                            <VerticalStackLayout>
-                                <Label Text="{Binding Name}"
-                                       FontSize="15"
-                                       FontAttributes="Bold"
-                                       LineBreakMode="TailTruncation"
-                                       TextColor="{Binding ItemTextColor}"/>
-                                <Label Text="{Binding Category}"
-                                       FontSize="11"
-                                       TextColor="{Binding CategoryTextColor}"/>
-                                <Label Text="{Binding PrepTime, StringFormat='⏱️ {0} min'}"
-                                       FontSize="11"
-                                       TextColor="#FF6B35"/>
-                            </VerticalStackLayout>
-                            <Label Grid.Column="1"
-                                   Text="{Binding IsFavorite, Converter={StaticResource FavoriteConverter}}"
-                                   FontSize="20"
-                                   VerticalTextAlignment="Center"
-                                   HorizontalTextAlignment="Center"/>
-                        </Grid>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <!-- 下拉刷新 + 食谱列表 -->
+        <RefreshView x:Name="RefreshView"
+                     Grid.Row="5"
+                     IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}"
+                     RefreshColor="#FF6B35">
+            <CollectionView x:Name="RecipesCollectionView"
+                            SelectionMode="None"
+                            Margin="0,5,0,0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="12,8"
+                               Margin="10,4"
+                               BackgroundColor="{Binding ItemBackgroundColor}"
+                               CornerRadius="12">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    CommandParameter="{Binding .}"
+                                    Tapped="OnRecipeTapped"/>
+                            </Frame.GestureRecognizers>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Name}"
+                                           FontSize="{Binding NameFontSize}"
+                                           FontAttributes="Bold"
+                                           LineBreakMode="TailTruncation"
+                                           TextColor="{Binding ItemTextColor}"/>
+                                    <Label Text="{Binding Category}"
+                                           FontSize="{Binding CategoryFontSize}"
+                                           TextColor="{Binding CategoryTextColor}"/>
+                                    <Label Text="{Binding PrepTime, StringFormat='⏱️ {0} min'}"
+                                           FontSize="{Binding TimeFontSize}"
+                                           TextColor="#FF6B35"/>
+                                </VerticalStackLayout>
+                                <Label Grid.Column="1"
+                                       Text="{Binding IsFavorite, Converter={StaticResource FavoriteConverter}}"
+                                       FontSize="20"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
 
     </Grid>
 </ContentPage>

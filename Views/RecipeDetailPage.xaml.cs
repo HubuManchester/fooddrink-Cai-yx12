@@ -8,6 +8,7 @@ public partial class RecipeDetailPage : ContentPage
     private Recipe _recipe;
     private RecipeService _recipeService;
     private ITextToSpeech? _textToSpeech;
+    private string _currentPhotoPath = "";
 
     public RecipeDetailPage(Recipe recipe, RecipeService recipeService)
     {
@@ -25,6 +26,77 @@ public partial class RecipeDetailPage : ContentPage
         StepsCollectionView.ItemsSource = _recipe.Steps;
 
         UpdateFavoriteButton();
+        LoadSavedPhoto();
+
+        DeletePhotoButton.Clicked += OnDeletePhotoClicked;
+    }
+
+    private void LoadSavedPhoto()
+    {
+        try
+        {
+            string photoFileName = $"recipe_photo_{_recipe.Id}.jpg";
+            string photoPath = Path.Combine(FileSystem.CacheDirectory, photoFileName);
+
+            if (File.Exists(photoPath))
+            {
+                _currentPhotoPath = photoPath;
+                PreviewImage.Source = ImageSource.FromFile(photoPath);
+                PhotoPreviewBorder.IsVisible = true;
+                PhotoPathLabel.Text = "Photo saved";
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Load photo error: {ex.Message}");
+        }
+    }
+
+    private void SavePhotoToCache(string sourcePath)
+    {
+        try
+        {
+            string photoFileName = $"recipe_photo_{_recipe.Id}.jpg";
+            string destPath = Path.Combine(FileSystem.CacheDirectory, photoFileName);
+
+            if (File.Exists(destPath))
+            {
+                File.Delete(destPath);
+            }
+
+            File.Copy(sourcePath, destPath, true);
+            _currentPhotoPath = destPath;
+
+            PreviewImage.Source = ImageSource.FromFile(destPath);
+            PhotoPreviewBorder.IsVisible = true;
+            PhotoPathLabel.Text = "Photo saved";
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Save photo error: {ex.Message}");
+        }
+    }
+
+    private void OnDeletePhotoClicked(object? sender, EventArgs e)
+    {
+        try
+        {
+            string photoFileName = $"recipe_photo_{_recipe.Id}.jpg";
+            string photoPath = Path.Combine(FileSystem.CacheDirectory, photoFileName);
+
+            if (File.Exists(photoPath))
+            {
+                File.Delete(photoPath);
+            }
+
+            PhotoPreviewBorder.IsVisible = false;
+            PreviewImage.Source = null;
+            _currentPhotoPath = "";
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Delete photo error: {ex.Message}");
+        }
     }
 
     private void UpdateFavoriteButton()
@@ -92,7 +164,8 @@ public partial class RecipeDetailPage : ContentPage
 
         if (photoPath != null)
         {
-            await DisplayAlert("Success", "Photo taken and saved!", "OK");
+            SavePhotoToCache(photoPath);
+            await DisplayAlert("Success", "Photo taken and saved for this recipe!", "OK");
         }
         else
         {

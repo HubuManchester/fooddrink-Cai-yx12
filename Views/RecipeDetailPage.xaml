@@ -2,27 +2,33 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RecipeRandomizer.Views.RecipeDetailPage"
-             Title="Recipe Details">
+             Title="Recipe Details"
+             BackgroundColor="#F5F5F5">
 
     <ScrollView>
         <VerticalStackLayout Padding="15" Spacing="8">
 
+            <!-- 菜谱名称 -->
             <Label x:Name="RecipeNameLabel"
                    FontSize="22"
                    FontAttributes="Bold"
-                   LineBreakMode="WordWrap"/>
+                   LineBreakMode="WordWrap"
+                   HorizontalOptions="Center"/>
 
-            <HorizontalStackLayout Spacing="15">
+            <!-- 分类和准备时间 -->
+            <HorizontalStackLayout Spacing="15" HorizontalOptions="Center">
                 <Label x:Name="CategoryLabel" FontSize="13" TextColor="Gray"/>
                 <Label x:Name="PrepTimeLabel" FontSize="13" TextColor="#FF6B35"/>
             </HorizontalStackLayout>
 
+            <!-- 收藏按钮 -->
             <Button x:Name="FavoriteButton"
                     HeightRequest="40"
                     CornerRadius="10"
                     FontAttributes="Bold"
                     Clicked="OnFavoriteClicked"/>
 
+            <!-- 语音朗读按钮 -->
             <Button x:Name="SpeakButton"
                     Text="🔊 Read Steps Aloud"
                     BackgroundColor="#2196F3"
@@ -32,6 +38,7 @@
                     FontAttributes="Bold"
                     Clicked="OnSpeakClicked"/>
 
+            <!-- 拍照按钮 -->
             <Button x:Name="CameraButton"
                     Text="📷 Take Photo"
                     BackgroundColor="#9C27B0"
@@ -41,6 +48,43 @@
                     FontAttributes="Bold"
                     Clicked="OnCameraClicked"/>
 
+            <!-- 照片预览框 -->
+            <Frame x:Name="PhotoPreviewBorder"
+                   BackgroundColor="White"
+                   Padding="12"
+                   Margin="0,5,0,0"
+                   IsVisible="False"
+                   BorderColor="LightGray"
+                   CornerRadius="10">
+                <Grid ColumnDefinitions="Auto, *">
+                    <Image x:Name="PreviewImage"
+                           HeightRequest="80"
+                           WidthRequest="80"
+                           Aspect="AspectFill"
+                           Margin="0,0,12,0"/>
+                    <VerticalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                        <Label Text="📸 Meal Photo"
+                               FontSize="14"
+                               FontAttributes="Bold"/>
+                        <Label x:Name="PhotoPathLabel"
+                               Text=""
+                               FontSize="10"
+                               TextColor="Gray"
+                               LineBreakMode="TailTruncation"/>
+                        <Button x:Name="DeletePhotoButton"
+                                Text="Delete"
+                                BackgroundColor="#F44336"
+                                TextColor="White"
+                                HeightRequest="32"
+                                WidthRequest="70"
+                                FontSize="12"
+                                CornerRadius="16"
+                                Clicked="OnDeletePhotoClicked"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Frame>
+
+            <!-- 分享按钮 -->
             <Button x:Name="ShareButton"
                     Text="📤 Share Recipe"
                     BackgroundColor="#4CAF50"
@@ -50,11 +94,16 @@
                     FontAttributes="Bold"
                     Clicked="OnShareClicked"/>
 
+            <!-- 分隔线 -->
+            <BoxView HeightRequest="1" Color="#E0E0E0" Margin="0,10,0,5"/>
+
+            <!-- 食材标题 -->
             <Label Text="📝 Ingredients"
                    FontSize="16"
                    FontAttributes="Bold"
-                   Margin="0,10,0,0"/>
+                   Margin="0,10,0,5"/>
 
+            <!-- 食材列表 - 使用 {Binding .} -->
             <CollectionView x:Name="IngredientsCollectionView"
                             HeightRequest="130">
                 <CollectionView.ItemTemplate>
@@ -66,11 +115,13 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
+            <!-- 步骤标题 -->
             <Label Text="👩‍🍳 Steps"
                    FontSize="16"
                    FontAttributes="Bold"
-                   Margin="0,10,0,0"/>
+                   Margin="0,10,0,5"/>
 
+            <!-- 步骤列表 - 使用 {Binding .} -->
             <CollectionView x:Name="StepsCollectionView"
                             HeightRequest="220">
                 <CollectionView.ItemTemplate>
