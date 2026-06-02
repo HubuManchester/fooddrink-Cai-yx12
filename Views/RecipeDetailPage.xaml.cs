@@ -46,27 +46,19 @@ public partial class RecipeDetailPage : ContentPage
         try
         {
             var recipeId = _recipe.Id;
-            System.Diagnostics.Debug.WriteLine($"=== Favorite clicked for recipe ID: {recipeId}, Name: {_recipe.Name}");
-
             _recipeService.ToggleFavorite(recipeId);
 
-            // 重新获取当前菜谱的最新状态
             var updatedRecipe = _recipeService.GetAllRecipes().FirstOrDefault(r => r.Id == recipeId);
             if (updatedRecipe != null)
             {
                 _recipe.IsFavorite = updatedRecipe.IsFavorite;
             }
 
-            System.Diagnostics.Debug.WriteLine($"=== After toggle, IsFavorite: {_recipe.IsFavorite}");
-
             UpdateFavoriteButton();
-
-            // 显示提示确认操作
             await DisplayAlert("Success", _recipe.IsFavorite ? "Added to favorites!" : "Removed from favorites", "OK");
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"=== ERROR in OnFavoriteClicked: {ex.Message}");
             await DisplayAlert("Error", ex.Message, "OK");
         }
     }
@@ -105,6 +97,35 @@ public partial class RecipeDetailPage : ContentPage
         else
         {
             await DisplayAlert("Error", "Failed to take photo. Please grant camera permission.", "OK");
+        }
+    }
+
+    private async void OnShareClicked(object? sender, EventArgs e)
+    {
+        try
+        {
+            var shareText = $"🍽️ {_recipe.Name}\n\n📝 Ingredients:\n";
+            foreach (var ingredient in _recipe.Ingredients)
+            {
+                shareText += $"• {ingredient}\n";
+            }
+            shareText += $"\n👩‍🍳 Steps:\n";
+            for (int i = 0; i < _recipe.Steps.Count; i++)
+            {
+                shareText += $"{i + 1}. {_recipe.Steps[i]}\n";
+            }
+            shareText += $"\n⏱️ Prep Time: {_recipe.PrepTime} minutes";
+
+            await Share.Default.RequestAsync(new ShareTextRequest
+            {
+                Text = shareText,
+                Title = $"Share {_recipe.Name}"
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Share error: {ex.Message}");
+            await DisplayAlert("Error", "Cannot share recipe", "OK");
         }
     }
 }

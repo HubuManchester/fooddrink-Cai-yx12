@@ -41,6 +41,15 @@
                     FontAttributes="Bold"
                     Clicked="OnCameraClicked"/>
 
+            <Button x:Name="ShareButton"
+                    Text="📤 Share Recipe"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    HeightRequest="40"
+                    CornerRadius="10"
+                    FontAttributes="Bold"
+                    Clicked="OnShareClicked"/>
+
             <Label Text="📝 Ingredients"
                    FontSize="16"
                    FontAttributes="Bold"

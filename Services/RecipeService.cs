@@ -23,6 +23,7 @@ public class RecipeService
     {
         _localRecipes = new List<Recipe>
     {
+        // 原有食谱 1-8
         new Recipe { Id = 1, Name = "Tomato Scrambled Eggs", Category = "Chinese",
             Ingredients = new List<string> { "2 tomatoes", "3 eggs", "Salt", "Sugar", "Oil" },
             Steps = new List<string> { "Cut tomatoes", "Beat eggs with salt", "Scramble eggs", "Cook tomatoes", "Mix and season" },
@@ -54,46 +55,79 @@ public class RecipeService
         new Recipe { Id = 8, Name = "Pancakes", Category = "Breakfast",
             Ingredients = new List<string> { "200g flour", "2 eggs", "300ml milk", "1 tbsp sugar", "Butter", "Maple syrup" },
             Steps = new List<string> { "Mix dry ingredients", "Add eggs and milk", "Whisk until smooth", "Cook on pan until bubbles form", "Flip and cook other side", "Serve with syrup" },
-            PrepTime = 20, IsFavorite = false },     
+            PrepTime = 20, IsFavorite = false },
+        
+        // 新增食谱 9-16
         new Recipe { Id = 9, Name = "Beef Burger", Category = "Western",
             Ingredients = new List<string> { "Burger bun", "Beef patty", "Lettuce", "Tomato", "Cheese", "Ketchup", "Mayonnaise" },
             Steps = new List<string> { "Toast the burger bun", "Cook beef patty on grill", "Place cheese on patty to melt", "Assemble bun with lettuce, tomato, patty", "Add ketchup and mayonnaise", "Serve with fries" },
             PrepTime = 25, IsFavorite = false },
-
         new Recipe { Id = 10, Name = "Fried Rice", Category = "Chinese",
             Ingredients = new List<string> { "2 cups cooked rice", "2 eggs", "100g shrimp or chicken", "Soy sauce", "Green onions", "Oil" },
             Steps = new List<string> { "Scramble eggs in wok", "Add meat and stir-fry", "Add rice and break up clumps", "Add soy sauce for color", "Stir-fry for 2-3 minutes", "Garnish with green onions" },
             PrepTime = 15, IsFavorite = false },
-
         new Recipe { Id = 11, Name = "Greek Yogurt Bowl", Category = "Breakfast",
             Ingredients = new List<string> { "200g Greek yogurt", "Granola", "Mixed berries", "Honey", "Chia seeds" },
             Steps = new List<string> { "Scoop yogurt into a bowl", "Top with granola and berries", "Drizzle with honey", "Sprinkle chia seeds", "Serve immediately" },
             PrepTime = 5, IsFavorite = false },
-
         new Recipe { Id = 12, Name = "Chicken Noodle Soup", Category = "Lunch",
             Ingredients = new List<string> { "200g chicken breast", "100g egg noodles", "Carrots", "Celery", "Onion", "Chicken broth", "Herbs" },
             Steps = new List<string> { "Sauté onion, carrots, celery", "Add broth and bring to boil", "Add chicken and simmer", "Shred chicken when cooked", "Add noodles and cook until tender", "Season with herbs" },
             PrepTime = 40, IsFavorite = false },
-
         new Recipe { Id = 13, Name = "Tacos", Category = "Mexican",
             Ingredients = new List<string> { "Taco shells", "Ground beef", "Taco seasoning", "Lettuce", "Cheese", "Salsa", "Sour cream" },
             Steps = new List<string> { "Brown ground beef with taco seasoning", "Warm taco shells", "Fill shells with beef", "Top with lettuce, cheese, salsa", "Add sour cream", "Serve with lime wedges" },
             PrepTime = 20, IsFavorite = false },
-
         new Recipe { Id = 14, Name = "Green Smoothie", Category = "Drink",
             Ingredients = new List<string> { "1 cup spinach", "1 banana", "1/2 cup mango", "1/2 cup orange juice", "1/2 cup Greek yogurt" },
             Steps = new List<string> { "Add spinach and orange juice to blender", "Add banana and mango", "Add Greek yogurt", "Blend until smooth", "Pour and serve cold" },
             PrepTime = 5, IsFavorite = false },
-
         new Recipe { Id = 15, Name = "Roasted Vegetables", Category = "Lunch",
             Ingredients = new List<string> { "Broccoli", "Carrots", "Bell peppers", "Red onion", "Olive oil", "Salt", "Pepper", "Rosemary" },
             Steps = new List<string> { "Preheat oven to 200°C", "Chop all vegetables", "Toss with oil and seasoning", "Spread on baking sheet", "Roast for 20-25 minutes", "Serve warm" },
             PrepTime = 30, IsFavorite = false },
-
         new Recipe { Id = 16, Name = "Ice Cream Sundae", Category = "Dessert",
             Ingredients = new List<string> { "2 scoops vanilla ice cream", "Chocolate sauce", "Whipped cream", "Sprinkles", "Cherry" },
             Steps = new List<string> { "Place ice cream in a bowl", "Drizzle with chocolate sauce", "Add whipped cream", "Top with sprinkles", "Place cherry on top", "Serve immediately" },
-            PrepTime = 5, IsFavorite = false }
+            PrepTime = 5, IsFavorite = false },
+        
+        // 新增食谱 17-25
+        new Recipe { Id = 17, Name = "Omelette", Category = "Breakfast",
+            Ingredients = new List<string> { "3 eggs", "Cheese", "Ham", "Mushrooms", "Butter", "Salt", "Pepper" },
+            Steps = new List<string> { "Whisk eggs with salt and pepper", "Melt butter in pan", "Pour eggs into pan", "Add fillings on one side", "Fold omelette in half", "Cook until cheese melts", "Serve hot" },
+            PrepTime = 10, IsFavorite = false },
+        new Recipe { Id = 18, Name = "Pad Thai", Category = "Thai",
+            Ingredients = new List<string> { "200g rice noodles", "100g shrimp", "2 eggs", "Tofu", "Bean sprouts", "Peanuts", "Tamarind paste", "Fish sauce" },
+            Steps = new List<string> { "Soak noodles in warm water", "Stir-fry shrimp and tofu", "Push to side, scramble eggs", "Add noodles and sauce", "Toss with bean sprouts and peanuts", "Serve with lime wedge" },
+            PrepTime = 30, IsFavorite = false },
+        new Recipe { Id = 19, Name = "Grilled Cheese Sandwich", Category = "Lunch",
+            Ingredients = new List<string> { "2 slices bread", "Butter", "2 slices cheese" },
+            Steps = new List<string> { "Butter outside of bread", "Place cheese between bread", "Cook in pan until golden brown", "Flip and cook other side", "Serve hot" },
+            PrepTime = 10, IsFavorite = false },
+        new Recipe { Id = 20, Name = "Mashed Potatoes", Category = "Side Dish",
+            Ingredients = new List<string> { "4 potatoes", "Butter", "Milk", "Salt", "Pepper" },
+            Steps = new List<string> { "Peel and cut potatoes", "Boil until soft", "Mash potatoes", "Add butter and milk", "Season with salt and pepper", "Mix until smooth" },
+            PrepTime = 25, IsFavorite = false },
+        new Recipe { Id = 21, Name = "Guacamole", Category = "Appetizer",
+            Ingredients = new List<string> { "2 avocados", "1 lime", "Salt", "Cilantro", "Onion", "Tomato" },
+            Steps = new List<string> { "Mash avocados in a bowl", "Add lime juice", "Dice onion and tomato", "Chop cilantro", "Mix all ingredients", "Season with salt", "Serve with tortilla chips" },
+            PrepTime = 10, IsFavorite = false },
+        new Recipe { Id = 22, Name = "Pasta Carbonara", Category = "Italian",
+            Ingredients = new List<string> { "200g pasta", "100g pancetta", "2 eggs", "Parmesan cheese", "Black pepper" },
+            Steps = new List<string> { "Cook pasta", "Fry pancetta until crisp", "Whisk eggs and cheese", "Mix hot pasta with egg mixture", "Add pancetta", "Season with pepper" },
+            PrepTime = 20, IsFavorite = false },
+        new Recipe { Id = 23, Name = "Banana Bread", Category = "Dessert",
+            Ingredients = new List<string> { "3 ripe bananas", "200g flour", "2 eggs", "100g sugar", "100g butter", "1 tsp baking soda" },
+            Steps = new List<string> { "Preheat oven to 175°C", "Mash bananas", "Cream butter and sugar", "Add eggs", "Mix in flour and baking soda", "Add bananas", "Bake for 60 minutes" },
+            PrepTime = 70, IsFavorite = false },
+        new Recipe { Id = 24, Name = "Spring Rolls", Category = "Appetizer",
+            Ingredients = new List<string> { "Rice paper wrappers", "Shrimp", "Vermicelli noodles", "Lettuce", "Mint", "Peanut sauce" },
+            Steps = new List<string> { "Soak rice paper in warm water", "Place on damp towel", "Add fillings", "Roll tightly", "Serve with peanut sauce" },
+            PrepTime = 20, IsFavorite = false },
+        new Recipe { Id = 25, Name = "Lemonade", Category = "Drink",
+            Ingredients = new List<string> { "4 lemons", "1 cup sugar", "4 cups water", "Ice cubes" },
+            Steps = new List<string> { "Juice the lemons", "Make simple syrup with sugar and water", "Mix lemon juice with syrup", "Add water", "Serve over ice" },
+            PrepTime = 10, IsFavorite = false }
     };
     }
 
