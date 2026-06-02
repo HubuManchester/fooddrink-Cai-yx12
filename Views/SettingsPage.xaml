@@ -12,7 +12,7 @@
                FontAttributes="Bold"
                HorizontalOptions="Center"/>
 
-        <Frame x:Name="SettingsFrame" Padding="15" CornerRadius="12">
+        <Frame x:Name="SettingsFrame" Padding="15">
             <VerticalStackLayout Spacing="15">
 
                 <Grid ColumnDefinitions="*,Auto">

@@ -15,14 +15,16 @@ public partial class MainPage : ContentPage
     private IAccelerometer? _accelerometer;
     private ITextToSpeech? _textToSpeech;
     private bool _isHardwareInitialized = false;
+    private bool _isNavigating = false;
+    private bool _justReturned = false;
 
     private Recipe _dailyRecommendation = null!;
 
-    // 手动摇动检测变量
-    private DateTime _lastShakeTime = DateTime.MinValue;
+    // 摇动检测变量
     private double _lastX = 0, _lastY = 0, _lastZ = 0;
-    private const double ShakeThreshold = 2.5; // 摇动阈值
-    private const int ShakeInterval = 500; // 500毫秒内只触发一次
+    private DateTime _lastShakeTime = DateTime.MinValue;
+    private const double ShakeThreshold = 3.0;
+    private const int ShakeInterval = 1500;
 
     public MainPage()
     {
@@ -95,9 +97,7 @@ public partial class MainPage : ContentPage
 
             if (_accelerometer != null && _accelerometer.IsSupported)
             {
-                // 使用加速度计读数变化事件，而不是 ShakeDetected
                 _accelerometer.ReadingChanged += OnAccelerometerReadingChanged;
-                System.Diagnostics.Debug.WriteLine("=== Accelerometer reading change registered");
             }
         }
         catch (Exception ex)
@@ -110,41 +110,46 @@ public partial class MainPage : ContentPage
 
     private void OnAccelerometerReadingChanged(object? sender, AccelerometerChangedEventArgs e)
     {
+        if (_isNavigating || _justReturned) return;
+
         try
         {
+            if (e?.Reading == null) return;
+
             var reading = e.Reading;
             double x = reading.Acceleration.X;
             double y = reading.Acceleration.Y;
             double z = reading.Acceleration.Z;
 
-            // 计算加速度变化
             double deltaX = Math.Abs(x - _lastX);
             double deltaY = Math.Abs(y - _lastY);
             double deltaZ = Math.Abs(z - _lastZ);
-
             double totalDelta = deltaX + deltaY + deltaZ;
 
-            // 更新上一次的值
             _lastX = x;
             _lastY = y;
             _lastZ = z;
 
-            // 检测摇动
             if (totalDelta > ShakeThreshold)
             {
                 var now = DateTime.Now;
                 if ((now - _lastShakeTime).TotalMilliseconds > ShakeInterval)
                 {
                     _lastShakeTime = now;
-                    System.Diagnostics.Debug.WriteLine($"=== Shake detected! TotalDelta: {totalDelta}");
 
-                    // 触发摇动后的操作
                     MainThread.BeginInvokeOnMainThread(async () =>
                     {
-                        // 触觉反馈
-                        if (HapticFeedback.Default.IsSupported)
+                        // 震动反馈
+                        try
                         {
-                            HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+                            if (HapticFeedback.Default.IsSupported)
+                            {
+                                HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Vibration error: {ex.Message}");
                         }
 
                         await GetRandomRecipeAndNavigate();
@@ -154,7 +159,7 @@ public partial class MainPage : ContentPage
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Accelerometer reading error: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Accelerometer error: {ex.Message}");
         }
     }
 
@@ -208,19 +213,24 @@ public partial class MainPage : ContentPage
 
     private async Task GetRandomRecipeAndNavigate()
     {
+        if (_isNavigating) return;
+        _isNavigating = true;
+
         try
         {
-            System.Diagnostics.Debug.WriteLine("=== GetRandomRecipeAndNavigate called");
+            // 停止加速度计
+            if (_accelerometer != null && _accelerometer.IsSupported && _accelerometer.IsMonitoring)
+            {
+                _accelerometer.Stop();
+            }
 
             var randomRecipe = _recipeService.GetRandomRecipe();
 
             if (randomRecipe == null)
             {
-                System.Diagnostics.Debug.WriteLine("=== Random recipe is null");
+                _isNavigating = false;
                 return;
             }
-
-            System.Diagnostics.Debug.WriteLine($"=== Random recipe: {randomRecipe.Name}");
 
             if (_textToSpeech != null)
             {
@@ -234,13 +244,15 @@ public partial class MainPage : ContentPage
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine("=== Navigating to detail page");
             await Navigation.PushAsync(new RecipeDetailPage(randomRecipe, _recipeService));
-            System.Diagnostics.Debug.WriteLine("=== Navigation completed");
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"GetRandomRecipeAndNavigate error: {ex.Message}");
+        }
+        finally
+        {
+            _isNavigating = false;
         }
     }
 
@@ -253,6 +265,12 @@ public partial class MainPage : ContentPage
     private async void OnSettingsClicked(object? sender, EventArgs e)
     {
         await Navigation.PushAsync(new SettingsPage());
+    }
+
+    private async void OnAddTapped(object? sender, TappedEventArgs e)
+    {
+        var currentRecipes = _recipeService.GetAllRecipes();
+        await Navigation.PushAsync(new AddRecipePage(_recipeService, currentRecipes));
     }
 
     private async void OnRecipeTapped(object sender, TappedEventArgs e)
@@ -281,21 +299,31 @@ public partial class MainPage : ContentPage
 
         InitializeHardware();
 
-        try
-        {
-            if (_accelerometer != null && _accelerometer.IsSupported && !_accelerometer.IsMonitoring)
-            {
-                _accelerometer.Start(SensorSpeed.Game);
-                System.Diagnostics.Debug.WriteLine("=== Accelerometer started");
-            }
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Failed to start accelerometer: {ex.Message}");
-        }
+        // 标记刚返回，暂时忽略摇动
+        _justReturned = true;
 
+        // 延迟重启加速度计，避免返回瞬间触发
+        Task.Delay(500).ContinueWith(_ =>
+        {
+            _justReturned = false;
+            try
+            {
+                if (_accelerometer != null && _accelerometer.IsSupported && !_accelerometer.IsMonitoring)
+                {
+                    _accelerometer.Start(SensorSpeed.Game);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to start accelerometer: {ex.Message}");
+            }
+        });
+
+        _allRecipes = _recipeService.GetAllRecipes();
+        _displayedRecipes = new List<Recipe>(_allRecipes);
         ApplyFilterAndSearch();
         RefreshFonts();
+        LoadDailyRecommendation();
     }
 
     protected override void OnDisappearing()
@@ -307,7 +335,6 @@ public partial class MainPage : ContentPage
             if (_accelerometer != null && _accelerometer.IsSupported && _accelerometer.IsMonitoring)
             {
                 _accelerometer.Stop();
-                System.Diagnostics.Debug.WriteLine("=== Accelerometer stopped");
             }
         }
         catch (Exception ex)

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeRandomizer.Views.AddRecipePage"
+             Title="Add Recipe"
+             BackgroundColor="#F5F5F5">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="12">
+
+            <Label Text="📝 Create New Recipe"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"/>
+
+            <Label Text="Recipe Name *" FontSize="14" FontAttributes="Bold"/>
+            <Entry x:Name="NameEntry" Placeholder="Enter recipe name"/>
+            <Label x:Name="NameErrorLabel" Text="" FontSize="12" TextColor="Red" IsVisible="False"/>
+
+            <Label Text="Category *" FontSize="14" FontAttributes="Bold"/>
+            <Picker x:Name="CategoryPicker" Title="Select category"/>
+            <Label x:Name="CategoryErrorLabel" Text="" FontSize="12" TextColor="Red" IsVisible="False"/>
+
+            <Label Text="Prep Time (minutes) *" FontSize="14" FontAttributes="Bold"/>
+            <Entry x:Name="PrepTimeEntry" Placeholder="30" Keyboard="Numeric"/>
+            <Label x:Name="PrepTimeErrorLabel" Text="" FontSize="12" TextColor="Red" IsVisible="False"/>
+
+            <Label Text="Ingredients * (one per line)" FontSize="14" FontAttributes="Bold"/>
+            <Editor x:Name="IngredientsEditor" Placeholder="2 tomatoes&#xA;3 eggs&#xA;Salt" HeightRequest="120"/>
+            <Label x:Name="IngredientsErrorLabel" Text="" FontSize="12" TextColor="Red" IsVisible="False"/>
+
+            <Label Text="Steps * (one per line)" FontSize="14" FontAttributes="Bold"/>
+            <Editor x:Name="StepsEditor" Placeholder="1. Cut tomatoes&#xA;2. Beat eggs&#xA;3. Cook" HeightRequest="150"/>
+            <Label x:Name="StepsErrorLabel" Text="" FontSize="12" TextColor="Red" IsVisible="False"/>
+
+            <HorizontalStackLayout Spacing="15" Margin="0,20,0,0">
+                <Button x:Name="SaveButton" Text="💾 Save Recipe" BackgroundColor="#4CAF50" TextColor="White" FontAttributes="Bold"/>
+                <Button x:Name="CancelButton" Text="Cancel" BackgroundColor="#9E9E9E" TextColor="White" FontAttributes="Bold"/>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
