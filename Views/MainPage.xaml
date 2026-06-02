@@ -10,7 +10,7 @@
         <converters:FavoriteConverter x:Key="FavoriteConverter"/>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto, Auto, Auto, *">
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, *">
 
         <!-- Title with Settings button -->
         <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Padding="10,15,10,10">
@@ -33,8 +33,34 @@
                     CornerRadius="35"/>
         </Grid>
 
+        <!-- 今日推荐卡片 -->
+        <Frame x:Name="DailyRecommendationFrame"
+               Grid.Row="1"
+               Margin="15,5,15,5"
+               Padding="15,10"
+               BackgroundColor="#FFF3E0"
+               CornerRadius="15">
+            <Grid ColumnDefinitions="Auto, *">
+                <Label Text="🌟" FontSize="30" VerticalTextAlignment="Center"/>
+                <VerticalStackLayout Grid.Column="1" Margin="10,0,0,0">
+                    <Label Text="Today's Recommendation" 
+                           FontSize="12" 
+                           TextColor="#FF6B35"
+                           FontAttributes="Bold"/>
+                    <Label x:Name="DailyRecommendationLabel"
+                           Text="Loading..."
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           LineBreakMode="TailTruncation"/>
+                </VerticalStackLayout>
+            </Grid>
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnDailyRecommendationTapped"/>
+            </Frame.GestureRecognizers>
+        </Frame>
+
         <!-- Search and Filter Area -->
-        <VerticalStackLayout Grid.Row="1" Padding="15" Spacing="10">
+        <VerticalStackLayout Grid.Row="2" Padding="15" Spacing="10">
 
             <SearchBar x:Name="SearchBar"
                        Placeholder="Search recipes..."
@@ -64,7 +90,7 @@
         </VerticalStackLayout>
 
         <!-- Random and Favorites Buttons -->
-        <Grid Grid.Row="2"
+        <Grid Grid.Row="3"
               ColumnDefinitions="*,*"
               ColumnSpacing="10"
               Padding="15,0,15,10">
@@ -91,7 +117,7 @@
 
         <!-- Recipe List -->
         <CollectionView x:Name="RecipesCollectionView"
-                        Grid.Row="3"
+                        Grid.Row="4"
                         SelectionMode="None"
                         Margin="0,5,0,0">
             <CollectionView.ItemTemplate>

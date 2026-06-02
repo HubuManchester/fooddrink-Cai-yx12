@@ -16,6 +16,8 @@ public partial class MainPage : ContentPage
     private ITextToSpeech? _textToSpeech;
     private bool _isHardwareInitialized = false;
 
+    private Recipe _dailyRecommendation = null!;
+
     public MainPage()
     {
         InitializeComponent();
@@ -25,6 +27,7 @@ public partial class MainPage : ContentPage
         _displayedRecipes = new List<Recipe>(_allRecipes);
 
         LoadCategories();
+        LoadDailyRecommendation();
         RefreshRecipeList();
 
         SearchBar.TextChanged += OnSearchTextChanged;
@@ -32,6 +35,15 @@ public partial class MainPage : ContentPage
         RandomButton.Clicked += OnRandomClicked;
         FavoritesButton.Clicked += OnFavoritesClicked;
         SettingsButton.Clicked += OnSettingsClicked;
+    }
+
+    private void LoadDailyRecommendation()
+    {
+        var allRecipes = _recipeService.GetAllRecipes();
+        var todaySeed = DateTime.Now.DayOfYear;
+        var random = new Random(todaySeed);
+        _dailyRecommendation = allRecipes[random.Next(allRecipes.Count)];
+        DailyRecommendationLabel.Text = _dailyRecommendation.Name;
     }
 
     public void RefreshFonts()
@@ -167,27 +179,21 @@ public partial class MainPage : ContentPage
 
     private async void OnRecipeTapped(object sender, TappedEventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine($"=== OnRecipeTapped called, Parameter: {e.Parameter}");
-
         if (e.Parameter is Recipe selectedRecipe)
         {
-            System.Diagnostics.Debug.WriteLine($"=== Selected recipe: Id={selectedRecipe.Id}, Name={selectedRecipe.Name}");
-
-            // 确保获取最新的菜谱数据
-            var fullRecipe = _recipeService.GetAllRecipes().FirstOrDefault(r => r.Id == selectedRecipe.Id);
-            if (fullRecipe != null)
-            {
-                await Navigation.PushAsync(new RecipeDetailPage(fullRecipe, _recipeService));
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine($"=== ERROR: Recipe with Id {selectedRecipe.Id} not found in service");
-                await Navigation.PushAsync(new RecipeDetailPage(selectedRecipe, _recipeService));
-            }
+            await Navigation.PushAsync(new RecipeDetailPage(selectedRecipe, _recipeService));
         }
-        else
+        else if (sender is Frame frame && frame.BindingContext is Recipe recipe)
         {
-            System.Diagnostics.Debug.WriteLine($"=== ERROR: Parameter is not a Recipe, type: {e.Parameter?.GetType()}");
+            await Navigation.PushAsync(new RecipeDetailPage(recipe, _recipeService));
+        }
+    }
+
+    private async void OnDailyRecommendationTapped(object sender, TappedEventArgs e)
+    {
+        if (_dailyRecommendation != null)
+        {
+            await Navigation.PushAsync(new RecipeDetailPage(_dailyRecommendation, _recipeService));
         }
     }
 
