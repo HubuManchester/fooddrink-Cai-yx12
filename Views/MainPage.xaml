@@ -109,15 +109,15 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout>
                                 <Label Text="{Binding Name}"
-                                       FontSize="{Binding NameFontSize}"
+                                       FontSize="15"
                                        FontAttributes="Bold"
                                        LineBreakMode="TailTruncation"
                                        TextColor="{Binding ItemTextColor}"/>
                                 <Label Text="{Binding Category}"
-                                       FontSize="{Binding CategoryFontSize}"
+                                       FontSize="11"
                                        TextColor="{Binding CategoryTextColor}"/>
                                 <Label Text="{Binding PrepTime, StringFormat='⏱️ {0} min'}"
-                                       FontSize="{Binding TimeFontSize}"
+                                       FontSize="11"
                                        TextColor="#FF6B35"/>
                             </VerticalStackLayout>
                             <Label Grid.Column="1"

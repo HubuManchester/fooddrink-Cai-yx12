@@ -167,14 +167,27 @@ public partial class MainPage : ContentPage
 
     private async void OnRecipeTapped(object sender, TappedEventArgs e)
     {
+        System.Diagnostics.Debug.WriteLine($"=== OnRecipeTapped called, Parameter: {e.Parameter}");
+
         if (e.Parameter is Recipe selectedRecipe)
         {
-            var recipeId = selectedRecipe.Id;
-            var fullRecipe = _recipeService.GetAllRecipes().FirstOrDefault(r => r.Id == recipeId);
+            System.Diagnostics.Debug.WriteLine($"=== Selected recipe: Id={selectedRecipe.Id}, Name={selectedRecipe.Name}");
+
+            // 确保获取最新的菜谱数据
+            var fullRecipe = _recipeService.GetAllRecipes().FirstOrDefault(r => r.Id == selectedRecipe.Id);
             if (fullRecipe != null)
             {
                 await Navigation.PushAsync(new RecipeDetailPage(fullRecipe, _recipeService));
             }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"=== ERROR: Recipe with Id {selectedRecipe.Id} not found in service");
+                await Navigation.PushAsync(new RecipeDetailPage(selectedRecipe, _recipeService));
+            }
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine($"=== ERROR: Parameter is not a Recipe, type: {e.Parameter?.GetType()}");
         }
     }
 
