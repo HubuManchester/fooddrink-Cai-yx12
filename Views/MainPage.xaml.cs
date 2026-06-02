@@ -43,6 +43,7 @@ public partial class MainPage : ContentPage
         CategoryPicker.FontSize = AccessibilityService.ScaleFontSize(12);
 
         ApplyTheme();
+        RefreshRecipeList();
     }
 
     public void ApplyTheme()
@@ -63,9 +64,6 @@ public partial class MainPage : ContentPage
             CategoryPicker.BackgroundColor = Colors.White;
             CategoryPicker.TextColor = Colors.Black;
         }
-
-        // 刷新列表以更新每个菜品的背景色和文字颜色
-        RefreshRecipeList();
     }
 
     private void InitializeHardware()
@@ -171,7 +169,12 @@ public partial class MainPage : ContentPage
     {
         if (e.Parameter is Recipe selectedRecipe)
         {
-            await Navigation.PushAsync(new RecipeDetailPage(selectedRecipe, _recipeService));
+            var recipeId = selectedRecipe.Id;
+            var fullRecipe = _recipeService.GetAllRecipes().FirstOrDefault(r => r.Id == recipeId);
+            if (fullRecipe != null)
+            {
+                await Navigation.PushAsync(new RecipeDetailPage(fullRecipe, _recipeService));
+            }
         }
     }
 

@@ -20,7 +20,8 @@
             <Button x:Name="FavoriteButton"
                     HeightRequest="40"
                     CornerRadius="10"
-                    FontAttributes="Bold"/>
+                    FontAttributes="Bold"
+                    Clicked="OnFavoriteClicked"/>
 
             <Button x:Name="SpeakButton"
                     Text="🔊 Read Steps Aloud"
@@ -28,7 +29,8 @@
                     TextColor="White"
                     HeightRequest="40"
                     CornerRadius="10"
-                    FontAttributes="Bold"/>
+                    FontAttributes="Bold"
+                    Clicked="OnSpeakClicked"/>
 
             <Button x:Name="CameraButton"
                     Text="📷 Take Photo"
@@ -36,7 +38,8 @@
                     TextColor="White"
                     HeightRequest="40"
                     CornerRadius="10"
-                    FontAttributes="Bold"/>
+                    FontAttributes="Bold"
+                    Clicked="OnCameraClicked"/>
 
             <Label Text="📝 Ingredients"
                    FontSize="16"

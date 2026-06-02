@@ -89,7 +89,6 @@ public class RecipeService
 
     public List<Recipe> GetAllRecipes()
     {
-        // 优先使用远程数据，如果远程数据可用且有内容
         if (_useRemoteData && _cachedRecipes.Count > 0)
         {
             return _cachedRecipes;
@@ -130,11 +129,44 @@ public class RecipeService
 
     public void ToggleFavorite(int recipeId)
     {
-        var recipes = GetAllRecipes();
-        var recipe = recipes.FirstOrDefault(r => r.Id == recipeId);
-        if (recipe != null)
+        System.Diagnostics.Debug.WriteLine($"=== ToggleFavorite called with ID: {recipeId}");
+
+        // 先尝试在缓存中找
+        if (_useRemoteData && _cachedRecipes.Count > 0)
         {
-            recipe.IsFavorite = !recipe.IsFavorite;
+            var cachedRecipe = _cachedRecipes.FirstOrDefault(r => r.Id == recipeId);
+            if (cachedRecipe != null)
+            {
+                System.Diagnostics.Debug.WriteLine($"=== Found in cache: {cachedRecipe.Name}, current favorite: {cachedRecipe.IsFavorite}");
+                cachedRecipe.IsFavorite = !cachedRecipe.IsFavorite;
+                System.Diagnostics.Debug.WriteLine($"=== New favorite status: {cachedRecipe.IsFavorite}");
+                return;
+            }
+        }
+
+        // 如果在缓存中没找到，尝试在本地数据中找
+        var localRecipe = _localRecipes.FirstOrDefault(r => r.Id == recipeId);
+        if (localRecipe != null)
+        {
+            System.Diagnostics.Debug.WriteLine($"=== Found in local: {localRecipe.Name}, current favorite: {localRecipe.IsFavorite}");
+            localRecipe.IsFavorite = !localRecipe.IsFavorite;
+            System.Diagnostics.Debug.WriteLine($"=== New favorite status: {localRecipe.IsFavorite}");
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine($"=== ERROR: Recipe with ID {recipeId} not found anywhere!");
+
+            // 打印所有可用的 ID
+            System.Diagnostics.Debug.WriteLine("=== Available cache IDs:");
+            foreach (var r in _cachedRecipes)
+            {
+                System.Diagnostics.Debug.WriteLine($"Cache ID: {r.Id}, Name: {r.Name}");
+            }
+            System.Diagnostics.Debug.WriteLine("=== Available local IDs:");
+            foreach (var r in _localRecipes)
+            {
+                System.Diagnostics.Debug.WriteLine($"Local ID: {r.Id}, Name: {r.Name}");
+            }
         }
     }
 

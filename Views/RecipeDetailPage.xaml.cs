@@ -25,10 +25,6 @@ public partial class RecipeDetailPage : ContentPage
         StepsCollectionView.ItemsSource = _recipe.Steps;
 
         UpdateFavoriteButton();
-
-        FavoriteButton.Clicked += OnFavoriteClicked;
-        SpeakButton.Clicked += OnSpeakClicked;
-        CameraButton.Clicked += OnCameraClicked;
     }
 
     private void UpdateFavoriteButton()
@@ -45,10 +41,34 @@ public partial class RecipeDetailPage : ContentPage
         }
     }
 
-    private void OnFavoriteClicked(object? sender, EventArgs e)
+    private async void OnFavoriteClicked(object? sender, EventArgs e)
     {
-        _recipeService.ToggleFavorite(_recipe.Id);
-        UpdateFavoriteButton();
+        try
+        {
+            var recipeId = _recipe.Id;
+            System.Diagnostics.Debug.WriteLine($"=== Favorite clicked for recipe ID: {recipeId}, Name: {_recipe.Name}");
+
+            _recipeService.ToggleFavorite(recipeId);
+
+            // 重新获取当前菜谱的最新状态
+            var updatedRecipe = _recipeService.GetAllRecipes().FirstOrDefault(r => r.Id == recipeId);
+            if (updatedRecipe != null)
+            {
+                _recipe.IsFavorite = updatedRecipe.IsFavorite;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"=== After toggle, IsFavorite: {_recipe.IsFavorite}");
+
+            UpdateFavoriteButton();
+
+            // 显示提示确认操作
+            await DisplayAlert("Success", _recipe.IsFavorite ? "Added to favorites!" : "Removed from favorites", "OK");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"=== ERROR in OnFavoriteClicked: {ex.Message}");
+            await DisplayAlert("Error", ex.Message, "OK");
+        }
     }
 
     private async void OnSpeakClicked(object? sender, EventArgs e)
