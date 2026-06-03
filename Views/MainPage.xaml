@@ -13,18 +13,22 @@
     <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
 
         <!-- Row 0: 标题区域 -->
-        <VerticalStackLayout Grid.Row="0" Padding="10,10,10,0" Spacing="5">
+        <VerticalStackLayout Grid.Row="0" Padding="10,10,10,0" Spacing="2">
             <Label Text="🍽️ Random Recipe"
                    FontSize="22"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"/>
+            <Label Text="Discover &amp; Share Delicious Recipes"
+                   FontSize="12"
+                   TextColor="Gray"
+                   HorizontalOptions="Center"/>
         </VerticalStackLayout>
 
-        <!-- Row 1: 功能按钮栏：地图 + 设置 -->
+        <!-- Row 1: 功能按钮栏 -->
         <HorizontalStackLayout Grid.Row="1" 
-                       Spacing="15" 
-                       HorizontalOptions="Center"
-                       Padding="10,0">
+                               Spacing="15" 
+                               HorizontalOptions="Center"
+                               Padding="10,0">
             <Button x:Name="MapButton"
                     Text="🗺️ Map"
                     BackgroundColor="Transparent"
@@ -50,7 +54,7 @@
         <!-- Row 3: 今日推荐卡片 -->
         <Frame x:Name="DailyRecommendationFrame"
                Grid.Row="3"
-               Margin="15,5,15,5"
+               Margin="15,5,15,0"
                Padding="15,10"
                BackgroundColor="#FFF3E0"
                CornerRadius="15">
@@ -73,8 +77,11 @@
             </Frame.GestureRecognizers>
         </Frame>
 
-        <!-- Row 4: 分类筛选 -->
-        <HorizontalStackLayout Grid.Row="4" Padding="15" Spacing="10" Margin="0,5,0,0">
+        <!-- Row 4: 分类筛选（紧贴上面和下面） -->
+        <HorizontalStackLayout Grid.Row="4" 
+                               Padding="15" 
+                               Spacing="10" 
+                               Margin="0,0,0,0">
             <Label Text="Category:"
                    VerticalTextAlignment="Center"
                    FontSize="14"/>
@@ -136,7 +143,7 @@
             </Frame.GestureRecognizers>
         </Frame>
 
-        <!-- Row 7: 下拉刷新 + 食谱列表 -->
+        <!-- Row 7: 食谱列表 -->
         <RefreshView x:Name="RefreshView"
                      Grid.Row="7"
                      IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}"

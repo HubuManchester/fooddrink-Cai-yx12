@@ -20,17 +20,9 @@ public partial class LoginPage : ContentPage
             return;
         }
 
-        if (!string.IsNullOrEmpty(username))
-        {
-            Preferences.Set("IsLoggedIn", true);
-            Preferences.Set("Username", username);
+        Preferences.Set("IsLoggedIn", true);
+        Preferences.Set("Username", username);
 
-            Application.Current!.MainPage = new AppShell();
-        }
-        else
-        {
-            ErrorLabel.Text = "Invalid username or password";
-            ErrorLabel.IsVisible = true;
-        }
+        Application.Current!.MainPage = new AppShell();
     }
 }

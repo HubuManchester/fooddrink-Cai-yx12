@@ -9,6 +9,9 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
+        // 临时：先清空登录状态，确保看到登录页
+        Preferences.Set("IsLoggedIn", false);
+
         bool isLoggedIn = Preferences.Get("IsLoggedIn", false);
 
         if (isLoggedIn)
@@ -19,11 +22,5 @@ public partial class App : Application
         {
             return new Window(new Views.LoginPage());
         }
-    }
-
-    public static void Logout()
-    {
-        Preferences.Set("IsLoggedIn", false);
-        Current!.MainPage = new Views.LoginPage();
     }
 }
