@@ -13,6 +13,7 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
     private List<Recipe> _displayedRecipes = null!;
     private string _currentCategory = "All";
     private string _currentSearchKeyword = "";
+    private Recipe _dailyRecommendation = null!;
 
     private IAccelerometer? _accelerometer;
     private ITextToSpeech? _textToSpeech;
@@ -47,6 +48,7 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
         _displayedRecipes = new List<Recipe>(_allRecipes);
 
         LoadCategories();
+        LoadDailyRecommendation();
         RefreshRecipeList();
 
         SearchBar.TextChanged += OnSearchTextChanged;
@@ -54,8 +56,21 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
         RandomButton.Clicked += OnRandomClicked;
         FavoritesButton.Clicked += OnFavoritesClicked;
         SettingsButton.Clicked += OnSettingsClicked;
+        MapButton.Clicked += OnMapClicked;
 
         RefreshView.Command = new Command(async () => await RefreshData());
+    }
+
+    private void LoadDailyRecommendation()
+    {
+        var allRecipes = _recipeService.GetAllRecipes();
+        if (allRecipes != null && allRecipes.Count > 0)
+        {
+            var todaySeed = DateTime.Now.DayOfYear;
+            var random = new Random(todaySeed);
+            _dailyRecommendation = allRecipes[random.Next(allRecipes.Count)];
+            DailyRecommendationLabel.Text = _dailyRecommendation.Name;
+        }
     }
 
     public void RefreshFonts()
@@ -68,7 +83,6 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
         FavoritesButton.FontSize = AccessibilityService.ScaleFontSize(15);
         CategoryPicker.FontSize = AccessibilityService.ScaleFontSize(12);
 
-        // 强制刷新列表，让所有绑定重新计算
         var currentList = _displayedRecipes.ToList();
         RecipesCollectionView.ItemsSource = null;
         RecipesCollectionView.ItemsSource = currentList;
@@ -106,12 +120,19 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
 
         try
         {
+            System.Diagnostics.Debug.WriteLine("=== RefreshData started ===");
+
             await _recipeService.ForceRefreshRemoteData();
 
             _allRecipes = _recipeService.GetAllRecipes();
             _displayedRecipes = new List<Recipe>(_allRecipes);
 
+            System.Diagnostics.Debug.WriteLine($"=== After refresh, total recipes: {_allRecipes?.Count}");
+
             ApplyFilterAndSearch();
+            LoadDailyRecommendation();
+
+            System.Diagnostics.Debug.WriteLine("=== RefreshData completed ===");
         }
         catch (Exception ex)
         {
@@ -121,6 +142,11 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
         {
             IsRefreshing = false;
         }
+    }
+
+    private async void OnMapClicked(object? sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new MapPage());
     }
 
     private void InitializeHardware()
@@ -316,6 +342,14 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
         }
     }
 
+    private async void OnDailyRecommendationTapped(object sender, TappedEventArgs e)
+    {
+        if (_dailyRecommendation != null)
+        {
+            await Navigation.PushAsync(new RecipeDetailPage(_dailyRecommendation, _recipeService));
+        }
+    }
+
     protected override void OnAppearing()
     {
         base.OnAppearing();
@@ -344,6 +378,7 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
         _displayedRecipes = new List<Recipe>(_allRecipes);
         ApplyFilterAndSearch();
         RefreshFonts();
+        LoadDailyRecommendation();
     }
 
     protected override void OnDisappearing()

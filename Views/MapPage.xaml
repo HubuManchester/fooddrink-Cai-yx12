@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeRandomizer.Views.MapPage"
+             Title="Nearby Restaurants"
+             BackgroundColor="#F5F5F5">
+
+    <VerticalStackLayout Padding="15" Spacing="15">
+
+        <Label Text="📍 Nearby Restaurants"
+               FontSize="22"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"/>
+
+        <Frame x:Name="LocationFrame"
+               Padding="12"
+               BackgroundColor="#E3F2FD"
+               CornerRadius="10">
+            <VerticalStackLayout>
+                <Label x:Name="LocationLabel"
+                       Text="Getting location..."
+                       FontSize="14"
+                       TextColor="Gray"/>
+            </VerticalStackLayout>
+        </Frame>
+
+        <Button x:Name="OpenMapButton"
+                Text="🗺️ Open in Maps"
+                BackgroundColor="#4CAF50"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="50"
+                FontAttributes="Bold"/>
+
+        <Label Text="🍽️ Popular Restaurants Near You"
+               FontSize="16"
+               FontAttributes="Bold"
+               Margin="0,10,0,5"/>
+
+        <CollectionView x:Name="RestaurantsCollectionView"
+                        HeightRequest="350">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="12,10" Margin="0,5" BackgroundColor="White" CornerRadius="10">
+                        <Grid ColumnDefinitions="Auto, *">
+                            <Label Text="🍴" FontSize="24" VerticalTextAlignment="Center" WidthRequest="40"/>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold"/>
+                                <Label Text="{Binding Address}" FontSize="12" TextColor="Gray"/>
+                                <Label Text="{Binding Distance}" FontSize="11" TextColor="#FF6B35"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>

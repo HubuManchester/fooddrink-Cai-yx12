@@ -10,38 +10,71 @@
         <converters:FavoriteConverter x:Key="FavoriteConverter"/>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, *">
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
 
-        <!-- 标题栏 + 设置按钮 -->
-        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Padding="10,15,10,10">
-            <Label Grid.Column="0"
-                   Text="🍽️ Random Recipe"
+        <!-- Row 0: 标题区域 -->
+        <VerticalStackLayout Grid.Row="0" Padding="10,10,10,0" Spacing="5">
+            <Label Text="🍽️ Random Recipe"
                    FontSize="22"
                    FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"/>
-            <Button Grid.Column="1"
-                    x:Name="SettingsButton"
-                    Text="⚙️"
+                   HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+        <!-- Row 1: 功能按钮栏：地图 + 设置 -->
+        <HorizontalStackLayout Grid.Row="1" 
+                       Spacing="15" 
+                       HorizontalOptions="Center"
+                       Padding="10,0">
+            <Button x:Name="MapButton"
+                    Text="🗺️ Map"
                     BackgroundColor="Transparent"
                     TextColor="#FF6B35"
-                    FontSize="24"
-                    WidthRequest="50"
-                    HeightRequest="50"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"/>
-        </Grid>
+                    FontSize="14"
+                    FontAttributes="Bold"/>
+            <Button x:Name="SettingsButton"
+                    Text="⚙️ Settings"
+                    BackgroundColor="Transparent"
+                    TextColor="#FF6B35"
+                    FontSize="14"
+                    FontAttributes="Bold"/>
+        </HorizontalStackLayout>
 
-        <!-- 搜索框 -->
+        <!-- Row 2: 搜索框 -->
         <SearchBar x:Name="SearchBar"
-                   Grid.Row="1"
+                   Grid.Row="2"
                    Margin="15,5,15,0"
                    Placeholder="Search recipes..."
                    BackgroundColor="White"
                    CancelButtonColor="Gray"/>
 
-        <!-- 分类筛选 -->
-        <HorizontalStackLayout Grid.Row="2" Padding="15" Spacing="10" Margin="0,5,0,0">
+        <!-- Row 3: 今日推荐卡片 -->
+        <Frame x:Name="DailyRecommendationFrame"
+               Grid.Row="3"
+               Margin="15,5,15,5"
+               Padding="15,10"
+               BackgroundColor="#FFF3E0"
+               CornerRadius="15">
+            <Grid ColumnDefinitions="Auto, *">
+                <Label Text="🌟" FontSize="30" VerticalTextAlignment="Center"/>
+                <VerticalStackLayout Grid.Column="1" Margin="10,0,0,0">
+                    <Label Text="Today's Recommendation" 
+                           FontSize="12" 
+                           TextColor="#FF6B35"
+                           FontAttributes="Bold"/>
+                    <Label x:Name="DailyRecommendationLabel"
+                           Text="Loading..."
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           LineBreakMode="TailTruncation"/>
+                </VerticalStackLayout>
+            </Grid>
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnDailyRecommendationTapped"/>
+            </Frame.GestureRecognizers>
+        </Frame>
+
+        <!-- Row 4: 分类筛选 -->
+        <HorizontalStackLayout Grid.Row="4" Padding="15" Spacing="10" Margin="0,5,0,0">
             <Label Text="Category:"
                    VerticalTextAlignment="Center"
                    FontSize="14"/>
@@ -61,8 +94,8 @@
                     HorizontalOptions="Center"/>
         </HorizontalStackLayout>
 
-        <!-- 随机和收藏按钮 -->
-        <Grid Grid.Row="3"
+        <!-- Row 5: 随机和收藏按钮 -->
+        <Grid Grid.Row="5"
               ColumnDefinitions="*,*"
               ColumnSpacing="10"
               Padding="15,0,15,10">
@@ -85,9 +118,9 @@
                     VerticalOptions="Center"/>
         </Grid>
 
-        <!-- 添加食谱按钮 -->
+        <!-- Row 6: 添加食谱按钮 -->
         <Frame x:Name="AddFrame"
-               Grid.Row="4"
+               Grid.Row="6"
                Margin="15,5,15,5"
                Padding="12,8"
                BackgroundColor="#E8F5E9"
@@ -103,9 +136,9 @@
             </Frame.GestureRecognizers>
         </Frame>
 
-        <!-- 下拉刷新 + 食谱列表 -->
+        <!-- Row 7: 下拉刷新 + 食谱列表 -->
         <RefreshView x:Name="RefreshView"
-                     Grid.Row="5"
+                     Grid.Row="7"
                      IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}"
                      RefreshColor="#FF6B35">
             <CollectionView x:Name="RecipesCollectionView"

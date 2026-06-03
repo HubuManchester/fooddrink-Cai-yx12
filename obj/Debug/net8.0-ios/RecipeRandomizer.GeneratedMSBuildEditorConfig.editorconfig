@@ -62,6 +62,12 @@ build_metadata.AdditionalFiles.ManifestResourceName = RecipeRandomizer.Views.Mai
 build_metadata.AdditionalFiles.TargetPath = Views\MainPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\MainPage.xaml
 
+[D:/cyx/RecipeRandomizer/Views/MapPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = RecipeRandomizer.Views.MapPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\MapPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\MapPage.xaml
+
 [D:/cyx/RecipeRandomizer/Views/RecipeDetailPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = RecipeRandomizer.Views.RecipeDetailPage.xaml
